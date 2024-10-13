@@ -1,0 +1,209 @@
+body {
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+/* Modal container */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed position */
+    z-index: 1000; /* On top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll */
+    background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+}
+  
+  /* Modal content box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Center vertically and horizontally */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Adjust as needed */
+    text-align: center;
+    position: relative;
+}
+  
+  /* Close button */
+.close-button {
+    color: #aaa;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 28px;
+    font-weight: bold;
+}
+  
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    cursor: pointer;
+}
+  
+.container {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.button-container {
+    margin:auto;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border: 2px solid #333;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+.queue-container {
+    padding: 20px;
+    border: 2px solid #333;
+    background-color: #fff;
+    width: 100%;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.queue-container h2 {
+    margin: 0 0 10px;
+}
+
+#queue-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 10px;
+}
+
+#queue-list li {
+    padding: 10px;
+    font-size: 24px;
+    border: 2px solid #333;
+    background-color: #fff;
+    cursor: default;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    text-align: center;
+    min-width: 40px;
+}
+
+#queue-list li:hover {
+    background-color: #ddd;
+}
+
+.animation-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 0;  /* No gap between the grid cells */
+    width: 400px; /* Width of the grid */
+    height: 320px; /* Height of the grid */
+    border: 2px solid #333;
+    background-color: #f9f9f9;
+    position: relative;
+
+    margin: 10% auto;
+}
+
+/* Add grid lines using the ::before pseudo-element */
+.animation-container::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right, black 1px, transparent 1px), 
+                      linear-gradient(to bottom, black 1px, transparent 1px);
+    background-size: 20% 25%;
+    pointer-events: none; /* Prevents interference with the rectangle */
+}
+
+/* Rectangle that will be positioned at the intersection points */
+#vehicle {
+    position: absolute; /* Added */
+    width: 40px;
+    height: 60px;
+    background-color: #333;
+    transition: transform 0.2s ease, grid-column 0.3s ease, grid-row 0.3s ease;
+    transform: translate(-50%, -50%) rotate(0deg);
+
+    left: 0px;
+    top: 320px;
+}
+
+#vehicle::before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    background-color: #ddd;
+    bottom: 100%; /* Positions the mark above the main rectangle */
+    top: 0;
+    left: 0;
+}
+
+#objectCarried{
+    position: relative;
+    margin: auto;
+    width : 18px;
+    height : 18px;
+    border-radius: 50%;
+
+}
+
+/* Rectangle that will be positioned at the intersection points */
+.obstacle {
+    position: absolute;
+    width : 20px;
+    height : 20px;
+    border-radius: 50%;
+    background-color: #000;
+
+    left: -10px;
+    top: 310px;
+}
+
+/* Rectangle that will be positioned at the intersection points */
+.object{
+    position: absolute;
+    width : 18px;
+    height : 18px;
+    border-radius: 50%;
+
+}
+
+.object.filled {
+    position: absolute;
+    border: 2px solid;
+}
+
+.object.empty {
+    position: absolute;
+    border: 2px solid;
+    background-color: transparent;
+}
+
+.object.hide {
+    display : hidden;
+    position: absolute;
+    background-color: transparent;
+}

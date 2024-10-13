@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button and Key Press Queue with Animation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="levelSelectionModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Select Level</h2>
+      <select id="levelSelector">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <button id="startGameButton">Start Game</button>
+    </div>
+  </div>
+  <div class="container">
+    <!-- Section for the circle and animation -->
+    <div class="animation-container">
+      <div id="vehicle">
+        <div id="objectCarried"> </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="button-container">
+      <button id="up-btn">▲</button>
+      <button id="left-btn">◀</button>
+      <button id="right-btn">▶</button>
+      <button id="func-btn">■</button>
+      <!-- <button id="delete-btn">←</button> -->
+    </div>
+  </div>
+  <div class="container">
+    <div class="queue-container">
+      <h2>Key/Button Press Queue</h2>
+      <ul id="queue-list">
+          <!-- Pressed keys/buttons will appear here -->
+      </ul>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
