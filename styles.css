@@ -3,7 +3,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
+    margin: 10%;
     background-color: #f0f0f0;
 }
 
@@ -26,7 +26,7 @@ body {
     margin: 15% auto; /* Center vertically and horizontally */
     padding: 20px;
     border: 1px solid #888;
-    width: 30%; /* Adjust as needed */
+    width: 50%; /* Adjust as needed */
     text-align: center;
     position: relative;
 }
@@ -45,6 +45,28 @@ body {
 .close-button:focus {
     color: black;
     cursor: pointer;
+}
+
+.level-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center;    /* Center buttons horizontally */
+    margin-top: 20px;
+}
+  
+.level-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    margin: 10px 0;          /* Vertical spacing between buttons */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    width: 150px;            /* Optional: Set a fixed width for consistency */
+}
+  
+.level-button:hover {
+    background-color: #45a049;
 }
   
 .container {
@@ -142,23 +164,18 @@ button:hover {
     position: absolute; /* Added */
     width: 40px;
     height: 60px;
-    background-color: #333;
+    border-radius: 10%;
+    /* border: 5px solid ; */
+    background: linear-gradient(
+        to bottom,               /* Direction of the gradient */
+        #ade323,
+        #49b208                 /* End color */
+    );
     transition: transform 0.2s ease, grid-column 0.3s ease, grid-row 0.3s ease;
     transform: translate(-50%, -50%) rotate(0deg);
 
     left: 0px;
     top: 320px;
-}
-
-#vehicle::before {
-    content: "";
-    position: absolute;
-    width: 40px;
-    height: 20px;
-    background-color: #ddd;
-    bottom: 100%; /* Positions the mark above the main rectangle */
-    top: 0;
-    left: 0;
 }
 
 #objectCarried{
