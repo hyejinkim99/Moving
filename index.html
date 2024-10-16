@@ -7,16 +7,39 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="menu-bar">
+    <button id="resetGameButton">Reset</button>
+    <button id="changeLevelButton">Select New</button>
+    <button id="instructionsButton">How to Play</button>
+  </div>
+
+  <!-- Instructions Modal -->
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <span class="close-instructions-button">&times;</span>
+      <h2>How to Play</h2>
+      <p>
+        Use the arrow buttons or keys to move the vehicle:
+        <ul>
+          <li>▲ or Up Arrow: Move forward</li>
+          <li>◀ or Left Arrow: Turn left</li>
+          <li>▶ or Right Arrow: Turn right</li>
+          <li>■ or Spacebar: Pick up or drop off objects</li>
+        </ul>
+        Complete the tasks to finish the level!
+      </p>
+    </div>
+  </div>
+
   <div id="levelSelectionModal" class="modal">
     <div class="modal-content">
       <span class="close-button">&times;</span>
       <h2>Select Level</h2>
-      <select id="levelSelector">
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-      </select>
-      <button id="startGameButton">Start Game</button>
+      <div class="level-buttons">
+        <button class="level-button" data-level="easy">Easy</button>
+        <button class="level-button" data-level="medium">Medium</button>
+        <button class="level-button" data-level="hard">Hard</button>
+      </div>
     </div>
   </div>
   <div class="container">
@@ -33,6 +56,7 @@
       <button id="left-btn">◀</button>
       <button id="right-btn">▶</button>
       <button id="func-btn">■</button>
+      <button id="play-btn">GO</button>
       <!-- <button id="delete-btn">←</button> -->
     </div>
   </div>
