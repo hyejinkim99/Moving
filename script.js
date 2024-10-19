@@ -30,10 +30,10 @@ class ActionQueue {
 
     getActionText(action) {
         const actionMap = {
-            'forward': '▲',
-            'left': '◀',
-            'right': '▶',
-            'function': '■'
+            'forward': '⬆️',
+            'left': '⬅️',
+            'right': '➡️',
+            'function': '⏹'
         };
         return actionMap[action] || '';
     }
@@ -130,7 +130,7 @@ class MapStatus {
             col: info.size[1]
         };
         this.obstacles = info.obstacles.map(obstacle => ({ row: obstacle[0], col: obstacle[1] }));
-        const colors = ['red', 'blue', 'green'];
+        const colors = ['blue', 'green', 'red'];
         this.objects = info.objects.map((object, index) => ({
             number: index + 1,
             color: colors[index % colors.length],
@@ -355,7 +355,7 @@ class LevelSelectionModal {
 
     initEventListeners() {
         // Close button event listener
-        const closeButton = document.querySelector('.close-button');
+        const closeButton = document.querySelector('.close-level-button');
         if (closeButton) {
             closeButton.onclick = this.closeModal.bind(this);
         }
@@ -402,7 +402,7 @@ class InstructionsModal {
 
     initEventListeners() {
         // Close button event listener
-        const closeButton = document.querySelector('.close-instructions-button');
+        const closeButton = document.querySelector('.close-instruction-button');
         if (closeButton) {
             closeButton.onclick = this.closeModal.bind(this);
         }
@@ -466,7 +466,7 @@ class Game {
                 if (this.gameData && this.currentMapIndex !== undefined) {
                     this.setupGame(this.gameData, this.currentMapIndex);
                 } else {
-                    this.modalHandler.openModal();
+                    this.levelSelectionModal.openModal();
                 }
             });
         }
@@ -664,9 +664,11 @@ class Game {
             case 'finish':
                 if (currentRow === 0 && currentCol === 0 && this.map.isCompleted()) {
                     alert('CLEAR!');
-                    this.gameData = null;
-                    this.currentMapIndex = null;
+                    // this.gameData = null;
+                    // this.currentMapIndex = null;
                     this.levelSelectionModal.openModal();
+                } else {
+                    alert('Go to the starting position');
                 }
                 break;
             default:

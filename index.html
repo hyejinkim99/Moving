@@ -8,68 +8,84 @@
 </head>
 <body>
   <div class="menu-bar">
-    <button id="resetGameButton">Reset</button>
-    <button id="changeLevelButton">Select New</button>
-    <button id="instructionsButton">How to Play</button>
+    <div class="left-menu">
+      <button id="changeLevelButton">🆕</button>
+      <button id="resetGameButton">🔄</button>
+    </div>
+    <div class="right-menu">
+      <button id="instructionsButton">ℹ️</button>
+    </div>
   </div>
 
   <!-- Instructions Modal -->
   <div id="instructionsModal" class="modal">
     <div class="modal-content">
-      <span class="close-instructions-button">&times;</span>
+      <span class="close-instruction-button close-button">&times;</span>
       <h2>How to Play</h2>
       <p>
-        Use the arrow buttons or keys to move the vehicle:
+        Use the arrow buttons or keys to move the vehicle, carrying objects to designated position.
         <ul>
-          <li>▲ or Up Arrow: Move forward</li>
-          <li>◀ or Left Arrow: Turn left</li>
-          <li>▶ or Right Arrow: Turn right</li>
-          <li>■ or Spacebar: Pick up or drop off objects</li>
+          <li>⬆️ button or Up Arrow: Move forward</li>
+          <li>⬅️ or Left Arrow: Turn left</li>
+          <li>➡️ or Right Arrow: Turn right</li>
+          <li>⏹ or Spacebar: Pick up or drop off objects</li>
+          <li>🆗 or Return: Finish the level at the starting position</li>
         </ul>
-        Complete the tasks to finish the level!
+        Complete the tasks and Go to starting position to finish the level!
       </p>
     </div>
   </div>
 
   <div id="levelSelectionModal" class="modal">
     <div class="modal-content">
-      <span class="close-button">&times;</span>
+      <span class="close-level-button">&times;</span>
       <h2>Select Level</h2>
       <div class="level-buttons">
-        <button class="level-button" data-level="easy">Easy</button>
-        <button class="level-button" data-level="medium">Medium</button>
-        <button class="level-button" data-level="hard">Hard</button>
+        <button class="level-button easy-btn" data-level="easy">Easy</button>
+        <button class="level-button medium-btn" data-level="medium">Medium</button>
+        <button class="level-button hard-btn" data-level="hard">Hard</button>
       </div>
     </div>
   </div>
-  <div class="container">
-    <!-- Section for the circle and animation -->
-    <div class="animation-container">
-      <div id="vehicle">
-        <div id="objectCarried"> </div>
+  <div class="game-container">
+    <div class="box left-box">
+      <div class="container map">
+        <!-- Section for the circle and animation -->
+        <div class="animation-container">
+          <div id="vehicle">
+            <div id="objectCarried"> </div>
+          </div>
+        </div>
+      </div>
+      <div class="container buttons">
+        <div class="button-container">
+          <div class="row">
+            <button id="up-btn">⬆️</button>
+          </div>
+          <div class="row">
+            <button id="left-btn">⬅️</button>
+            <button id="func-btn">⏹</button>
+            <button id="right-btn">➡️</button>
+          </div>
+          <!-- <button id="delete-btn">←</button> -->
+        </div>
+        <div class="button-container">
+          <button id="play-btn">🆗</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="container">
-    <div class="button-container">
-      <button id="up-btn">▲</button>
-      <button id="left-btn">◀</button>
-      <button id="right-btn">▶</button>
-      <button id="func-btn">■</button>
-      <button id="play-btn">GO</button>
-      <!-- <button id="delete-btn">←</button> -->
+    <div class="box right-box">
+      <div class="container">
+        <div class="queue-container">
+          <h2>Code</h2>
+          <ul id="queue-list">
+              <!-- Pressed keys/buttons will appear here -->
+          </ul>
+        </div>
+      </div>
     </div>
+   
   </div>
-  <div class="container">
-    <div class="queue-container">
-      <h2>Key/Button Press Queue</h2>
-      <ul id="queue-list">
-          <!-- Pressed keys/buttons will appear here -->
-      </ul>
-    </div>
-
-  </div>
-
   <script src="script.js"></script>
 </body>
 </html>
