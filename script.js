@@ -1,20 +1,29 @@
 class ActionQueue {
     constructor(queueClassName) {
+        // Set Action Queue
         this.queueList = [];
+
+        // Get Element
         this.queueElement = document.getElementById(queueClassName);
     }
 
     push(action) {
+        // Add Action to Queue
         this.queueList.push(action);
+
+        // Add New Action Element to Screen
         const actionText = this.getActionText(action);
-        const newItem = document.createElement('li');
-        newItem.textContent = actionText;
-        this.queueElement.appendChild(newItem);
+        const newActionElement = document.createElement('li');
+        newActionElement.textContent = actionText;
+        this.queueElement.appendChild(newActionElement);
     }
 
     pop() {
         if (this.queueList.length > 0) {
+            // Pop Action from Queue
             this.queueList.pop();
+
+            // Delete Action Element from Screen
             if (this.queueElement.lastChild) {
                 this.queueElement.removeChild(this.queueElement.lastChild);
             }
@@ -22,7 +31,10 @@ class ActionQueue {
     }
 
     clear() {
+        // Reset Action Queue
         this.queueList = [];
+
+        // Remove All Action Elements from Screen
         while (this.queueElement.lastChild) {
             this.queueElement.removeChild(this.queueElement.lastChild);
         }
@@ -121,6 +133,10 @@ class VehicleStatus {
         this.objectNumber = 0;
         this.objectColor = 'transparent';
     }
+
+    setHeading() {
+        this.heading = 0;
+    }
 }
 
 class MapStatus {
@@ -204,29 +220,39 @@ class MapStatus {
 }
 
 class VehicleView {
+    // Draw Vehicle on Screen with vehicleStatus : update(vehicleStatus)
+
     constructor() {
+        // Get Elements
         this.vehicle = document.getElementById('vehicle');
         this.object = document.getElementById('objectCarried');
-
         const container = document.querySelector('.animation-container');
+
+        // Measure Size
         const containerWidth = container.clientWidth;
         this.gridSize = Math.floor(containerWidth / 5);
         this.width = Math.floor(this.gridSize * 0.5);
         this.height = Math.floor(this.gridSize * 0.7);
+
+        // Set Style
         this.vehicle.style.width = `${this.width}px`; 
         this.vehicle.style.height = `${this.height}px`;
-
         this.vehicle.style.left = `0px`;
         this.vehicle.style.top = `${this.gridSize * 4}px`;
         this.vehicle.style.transform = `translate(${-this.width / 2}px, ${-this.height / 2}px) rotate(0deg)`;
     }
 
     update(vehicleStatus) {
+        // Measure Size
         const { row, col } = vehicleStatus.position;
         const heading = vehicleStatus.heading;
         const translateX = col * this.gridSize - this.width / 2;
         const translateY = -row * this.gridSize - this.height / 2;
+
+        // Set Style
         this.vehicle.style.transform = `translate(${translateX}px, ${translateY}px) rotate(${heading}deg)`;
+
+        // Show Object Status
         if (vehicleStatus.object.carrying) {
             this.drawObject(vehicleStatus.object.color);
         } else {
@@ -235,27 +261,34 @@ class VehicleView {
     }
 
     drawObject(color) {
+        // Show Object on Vehicle
         this.object.style.backgroundColor = color;
         this.object.style.border = `2px solid ${color}`;
     }
 
     eraseObject() {
+        // Hide Object on Vehicle
         this.object.style.backgroundColor = 'transparent';
         this.object.style.border = '2px solid transparent';
     }
 
     resized(vehicleStatus) {
+        // Get Element
         const container = document.querySelector('.animation-container');
+
+        // Measure Size
         const containerWidth = container.clientWidth;
         this.gridSize = Math.floor(containerWidth / 5);
         this.width = Math.floor(this.gridSize * 0.5);
         this.height = Math.floor(this.gridSize * 0.7);
+
+        // Set Style
         this.vehicle.style.width = `${this.width}px`; 
         this.vehicle.style.height = `${this.height}px`;
-
         this.vehicle.style.left = `0px`;
         this.vehicle.style.top = `${this.gridSize * 4}px`;
 
+        // Update
         if (vehicleStatus) {
             this.update(vehicleStatus);
         }
@@ -263,33 +296,51 @@ class VehicleView {
 }
 
 class MapView {
+    // Draw Map on Screen with mapStatus : draw(mapStatus)
+
     constructor() {
+        // Get Element
         const container = document.querySelector('.animation-container');
+
+        // Measure Size
         const containerWidth = container.clientWidth;
         const containerHeight = Math.floor(containerWidth*0.8);
-        container.style.height = `${containerHeight}px`;
-        
-        this.gridSize = containerWidth / 5; // Adjust as needed
+        this.gridSize = containerWidth / 5;
         this.left = 0;
-        this.top = containerHeight; // Center vertically
+        this.top = containerHeight;
         this.obSize = 20;
+
+        // Set Style
+        container.style.height = `${containerHeight}px`;
     }
 
     createElement(className, r, c) {
+        // Get Element
         const element = document.createElement('div');
+
+        // Set Class
         element.className = className;
+
+        // Set Style
         element.style.left = `${this.left + this.gridSize * c - this.obSize / 2}px`;
         element.style.top = `${this.top - this.gridSize * r - this.obSize / 2}px`;
+
         return element;
     }
 
-    drawObstacle(gridBox, r, c) {
+    drawObstacle(map, r, c) {
+        // Get Element
         const obstacle = this.createElement('obstacle', r, c);
-        gridBox.appendChild(obstacle);
+
+        // Add Element to Map
+        map.appendChild(obstacle);
     }
 
-    drawObject(gridBox, r, c, color, filled) {
+    drawObject(map, r, c, color, filled) {
+        // Create Empty Element
         const object = this.createElement('object', r, c);
+
+        // Set Style and Class
         object.style.borderColor = color;
         if (filled) {
             object.style.backgroundColor = color;
@@ -298,86 +349,108 @@ class MapView {
             object.style.backgroundColor = 'transparent';
             object.classList.add('empty');
         }
-        gridBox.appendChild(object);
+
+        // Add Object to Map
+        map.appendChild(object);
     }
 
     draw(mapStatus) {
-        const gridBox = document.querySelector('.animation-container');
-        const obstacles = gridBox.querySelectorAll('.obstacle');
-        const objects = gridBox.querySelectorAll('.object');
+        // Get Elements
+        const map = document.querySelector('.animation-container');
+        const obstacles = map.querySelectorAll('.obstacle');
+        const objects = map.querySelectorAll('.object');
+
+        // Delete Existing Obstacles and Objects on Map
         obstacles.forEach(element => element.remove());
         objects.forEach(element => element.remove());
 
-        // Draw obstacles
+        // Draw Obstacles
         mapStatus.obstacles.forEach(obstacle => {
-            this.drawObstacle(gridBox, obstacle.row, obstacle.col);
+            this.drawObstacle(map, obstacle.row, obstacle.col);
         });
 
-        // Draw objects
+        // Draw Objects
         mapStatus.objects.forEach(object => {
+            // When Object is Not Completed (Completed Obejcts Changes to Obstacles)
             if (!object.completed) {
-                this.drawObject(gridBox, object.end.row, object.end.col, object.color, false);
+                this.drawObject(map, object.end.row, object.end.col, object.color, false);
             }
+            // When Object is Carried
             if (!object.carried && !object.completed) {
-                this.drawObject(gridBox, object.start.row, object.start.col, object.color, true);
+                this.drawObject(map, object.start.row, object.start.col, object.color, true);
             }
         });
     }
     
     resized(mapStatus) {
+        // Get Element
         const container = document.querySelector('.animation-container');
+
+        // Measure Size
         const containerWidth = container.clientWidth;
         const containerHeight = Math.floor(containerWidth*0.8);
+        this.gridSize = containerWidth / 5;
+        this.left = 0;
+        this.top = containerHeight;
+
+        // Set Style
         container.style.height = `${containerHeight}px`;
 
-        this.gridSize = containerWidth / 5; // Adjust as needed
-        this.left = 0;
-        this.top = containerHeight; // Center vertically
-
+        // Draw Map
         if (mapStatus) {
             this.draw(mapStatus);
         }
     }
 
     getGridSize() {
+        // Get Element
         const container = document.querySelector('.animation-container');
+
+        // Measure Size
         const containerWidth = container.clientWidth;
+
         return Math.floor(containerWidth / 5);
     }
 }
 
 class LevelSelectionModal {
-    constructor(gameInstance) {
+    // Control Level Selection Modal
+
+    constructor(game) {
+        // Get Element
         this.modal = document.getElementById('levelSelectionModal');
-        this.gameInstance = gameInstance;
-        this.initEventListeners();
+
+        // Set Event Listeners
+        this.initEventListeners(game);
     }
 
-    initEventListeners() {
-        // Close button event listener
+    initEventListeners(game) {
+        // Get Element
         const closeButton = document.querySelector('.close-level-button');
+
+        // Close Modal When Button Clicked
         if (closeButton) {
             closeButton.onclick = this.closeModal.bind(this);
         }
 
-        // Close modal when clicking outside of it
+        // Close Modal When Clicking Outside of it
         window.addEventListener('click', (event) => {
             if (event.target == this.modal) {
                 this.closeModal();
             }
         });
 
-        // Start game button event listener
+        // Set Level Selection Event Listeners
         const levelButtons = this.modal.querySelectorAll('.level-button');
         levelButtons.forEach((button) => {
             button.addEventListener('click', (event) => {
                 const selectedLevel = event.target.getAttribute('data-level');
-                this.gameInstance.fetchAndProcessJson(selectedLevel);
+                game.start(selectedLevel);
                 this.closeModal();
             });
         });
 
-        // Open modal on window load
+        // Open Modal on Window Load
         window.addEventListener('load', this.openModal.bind(this));
     }
 
@@ -396,18 +469,23 @@ class LevelSelectionModal {
 
 class InstructionsModal {
     constructor() {
+        // Get Element
         this.modal = document.getElementById('instructionsModal');
+
+        // Set Event Listeners
         this.initEventListeners();
     }
 
     initEventListeners() {
-        // Close button event listener
+        // Get Element
         const closeButton = document.querySelector('.close-instruction-button');
+
+        // Close Modal When Button Clicked
         if (closeButton) {
             closeButton.onclick = this.closeModal.bind(this);
         }
 
-        // Close modal when clicking outside of it
+        // Close Modal When Clicking Outside of it
         window.addEventListener('click', (event) => {
             if (event.target == this.modal) {
                 this.closeModal();
@@ -430,56 +508,138 @@ class InstructionsModal {
 
 class Game {
     constructor() {
-        this.vehicle = new VehicleStatus();
-        this.vehicleView = new VehicleView(80, 40, 60);
-        this.map = null;
-        this.mapView = new MapView();
+        // Set Unchanging Game Status
         this.actions = new ActionQueue('queue-list');
         this.levelSelectionModal = new LevelSelectionModal(this);
         this.instructionsModal = new InstructionsModal();
+
+        // Set Game Data
         this.gameData = null;
-        this.currentMapIndex = null;
+        this.currentMapIndex = 0;
+        this.setDefaultGameData();
+
+        // Set Game Status
+        this.mode = 'simulator';
+        this.map = new MapStatus(this.gameData[this.currentMapIndex]);
+        this.mapView = new MapView();
+        this.vehicle = new VehicleStatus();
+        this.vehicleView = new VehicleView();
+
+        // Set Event Handler
         this.initEventListeners();
     }
 
+    setDefaultGameData() {
+        this.gameData = [
+            {
+                "size" : [5, 6],
+                "obstacles" : [],
+                "objects" : []
+            }
+        ];
+        this.currentMapIndex = 0;
+    }
+
     initEventListeners() {
-        // Initialize event listeners for buttons and keys
-        const buttonIds = ['up-btn', 'left-btn', 'right-btn', 'func-btn', 'play-btn'];
+        // Button Event
+        this.initControlButtonListners();
+        this.initResetButtonListener();
+        this.initLevelSelectionButtonListener();
+        this.initModeChangeButtonListener();
+        this.initInstructionButtonListener();
+
+        // Key Event
+        document.addEventListener('keydown', this.handleKeyPressed.bind(this));
+
+        // Screen Resize Event
+        this.initResizeEventListener();
+    }
+
+    handleButtonClick(event) {
+        // Handle Button Event
+        const buttonId = event.target.id;
+        if (buttonId === 'up-btn') {
+            this.handleMove('forward');
+        } else if (buttonId === 'left-btn') {
+            this.handleMove('left');
+        } else if (buttonId === 'right-btn') {
+            this.handleMove('right');
+        } else if (buttonId === 'func-btn') {
+            this.handleMove('function');
+        } else if (buttonId === 'delete-btn') {
+            this.handleMove('delete');
+        } else if (buttonId === 'play-btn') {
+            this.handleMove('finish');
+        }
+    }
+
+    handleKeyPressed(event) {
+        // Do Not Get Key Event When Modal is Open
+        if (this.levelSelectionModal.isModalOpened() || this.instructionsModal.isModalOpened()) {
+            return 0;
+        }
+
+        // Handle Key Event
+        const eventKey = event.key;
+        if (eventKey === 'ArrowUp') {
+            this.handleMove('forward');
+        } else if (eventKey === 'ArrowLeft') {
+            this.handleMove('left');
+        } else if (eventKey === 'ArrowRight') {
+            this.handleMove('right');
+        } else if (eventKey === ' ' || eventKey === 'Spacebar' || eventKey === 'Space') {
+            this.handleMove('function');
+            event.preventDefault();
+        } else if (eventKey === 'Backspace') {
+            this.handleMove('delete');
+        } else if (eventKey === 'Enter') {
+            this.handleMove('finish');
+        }
+    }
+
+    initControlButtonListners() {
+        const buttonIds = ['up-btn', 'left-btn', 'right-btn', 'func-btn', 'play-btn', 'delete-btn'];
         buttonIds.forEach((id) => {
             const button = document.getElementById(id);
             if (button) {
                 button.addEventListener('click', this.handleButtonClick.bind(this));
-            } else {
-                console.error('Button not found:', id);
             }
         });
+    }
 
-        document.addEventListener('keydown', this.handleKeyPressed.bind(this));
-
-        // Menu bar button event listeners
+    initResetButtonListener() {
         const resetGameButton = document.getElementById('resetGameButton');
-        const changeLevelButton = document.getElementById('changeLevelButton');
-        const instructionsButton = document.getElementById('instructionsButton');
-
         if (resetGameButton) {
             resetGameButton.addEventListener('click', () => {
-                if (this.gameData && this.currentMapIndex !== undefined) {
-                    this.setupGame(this.gameData, this.currentMapIndex);
-                } else {
-                    this.levelSelectionModal.openModal();
-                }
+                this.setupGame(false, true);
             });
         }
-        
+    }
 
-        if (changeLevelButton) {
-            changeLevelButton.addEventListener('click', this.levelSelectionModal.openModal.bind(this.levelSelectionModal));
+    initLevelSelectionButtonListener() {
+        const levelSelectionButton = document.getElementById('changeLevelButton');
+        if (levelSelectionButton) {
+            levelSelectionButton.addEventListener('click', this.levelSelectionModal.openModal.bind(this.levelSelectionModal));
         }
+    }
 
+    initModeChangeButtonListener() {
+        const instructionsButton = document.getElementById('modeChangeButton');
+        if (instructionsButton) {
+            instructionsButton.addEventListener('click', () => {
+                this.changeMode();
+            })
+        }
+    }
+
+    initInstructionButtonListener() {
+        const instructionsButton = document.getElementById('instructionsButton');
         if (instructionsButton) {
             instructionsButton.addEventListener('click', this.instructionsModal.openModal.bind(this.instructionsModal));
         }
+    }
 
+    initResizeEventListener() {
         window.addEventListener('resize', () => {
             try {
                 this.mapView.resized(this.map.getStatus());
@@ -495,187 +655,319 @@ class Game {
         })
     }
 
-    async fetchAndProcessJson(dataFile) {
+    start(level) {
+        this.fetchJsonAndSetupGame(level);
+    }
+    
+    async fetchJsonAndSetupGame(level) {
         try {
-            const response = await fetch(`data/${dataFile}.json`);
+            // Fetch Json
+            const response = await fetch(`data/${level}.json`);
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             const data = await response.json();
+
+            // Set Game Data
             this.gameData = data;
-            this.setupGame(this.gameData);
-        } catch (error) {
+
+            // Set Up Game
+            this.setupGame(true, true);  
+        } 
+        catch (error) {
+            // Show Error Message
             console.error('There was a problem with the fetch operation:', error);
             alert('Failed to load level data. Please try again.');
-            this.modalHandler.openModal();
+
+            // Open Level Selection Modal
+            this.setupGame(false, true);
+            this.levelSelectionModal.openModal();
         }
     }
 
-    setupGame(gameData, index = null) {
-        if (index === null) {
-            index = Math.floor(Math.random() * gameData.length);
+    setupGame(newGame = false, codeClear = false) {
+        // Get Random Index from Game Data Size
+        if (newGame) {
+            const index = Math.floor(Math.random() * this.gameData.length);
+        this.currentMapIndex = index;
         }
-        const mapInfo = gameData[index];
-        this.currentMapIndex = index; // Store the index of the current map
-        this.vehicle = new VehicleStatus();
-        this.vehicleView.update(this.vehicle.getStatus());
-    
+
+        // Set Changing Game Status
+        const mapInfo = this.gameData[this.currentMapIndex];
         this.map = new MapStatus(mapInfo);
         this.mapView.draw(this.map.getStatus());
-        this.actions.clear();
-    }
-
-    handleButtonClick(event) {
-        const buttonId = event.target.id;
-        switch (buttonId) {
-            case 'up-btn':
-                this.handleMove('forward');
-                break;
-            case 'left-btn':
-                this.handleMove('left');
-                break;
-            case 'right-btn':
-                this.handleMove('right');
-                break;
-            case 'func-btn':
-                this.handleMove('function');
-                break;
-            case 'play-btn':
-                this.handleMove('finish');
-                break;
-            default:
-                console.warn('Unknown button clicked:', buttonId);
-                break;
+        this.vehicle = new VehicleStatus();
+        this.vehicleView.update(this.vehicle.getStatus());
+        
+        // Code Clear When Required
+        if (codeClear) {
+            this.actions.clear();
         }
     }
 
-    handleKeyPressed(event) {
-        if (this.levelSelectionModal.isModalOpened() || this.instructionsModal.isModalOpened()) {
-            return;
-        }
-
-        const eventKey = event.key;
-        switch (eventKey) {
-            case 'ArrowUp':
-                this.handleMove('forward');
-                break;
-            case 'ArrowLeft':
-                this.handleMove('left');
-                break;
-            case 'ArrowRight':
-                this.handleMove('right');
-                break;
-            case ' ':
-            case 'Spacebar':
-            case 'Space':
-                this.handleMove('function');
-                event.preventDefault();
-                break;
-            case 'Backspace':
-                this.handleMove('delete');
-                break;
-            case 'Enter':
-                this.handleMove('finish');
-                break;
-            default:
-                break;
+    changeMode() {
+        const deleteButton = document.getElementById('delete-btn');
+        const modeChangeButton = document.getElementById('modeChangeButton');
+        if (this.mode === 'coding') {
+            this.mode = 'simulator';
+            deleteButton.style.display = `none`;
+            modeChangeButton.textContent = `🚗`;
+            this.setupGame(false, true);
+        } else {
+            this.mode = 'coding';
+            deleteButton.style.display = `inline`;
+            modeChangeButton.textContent = `💻`;
+            this.setupGame(false, true);
         }
     }
 
-    handleMove(action) {
-        if (!this.map) {
-            this.setupGame([
-                {
-                    "size" : [5, 6],
-                    "obstacles" : [],
-                    "objects" : []
-                },
-            ])
-            this.currentMapIndex = 0;
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async handleMove(action) {
+        if (this.mode === 'coding') {
+            await this.handleMoveOnCodingMode(action);
+        } else if (this.mode === 'simulator') {
+            this.handleMoveOnSimulatorMode(action);
         }
+    }
 
-        const vehicleStatus = this.vehicle.getStatus();
-        const currentRow = vehicleStatus.position.row;
-        const currentCol = vehicleStatus.position.col;
-        const nextPosition = vehicleStatus.nextPosition;
-        const nextRow = nextPosition.row;
-        const nextCol = nextPosition.col;
+    async handleMoveOnCodingMode(action) {
+        if (action === 'forward' || action === 'left' || action === 'right' || action === 'function') {
+            this.actions.push(action);
+        } else if (action === 'delete') {
+            this.actions.pop();
+        } else if (action === 'finish') {
+            let success = false;
 
-        switch (action) {
-            case 'forward':
-                if (!this.map.isPossibleAt(nextRow, nextCol)) {
-                    alert('Out of map');
-                    return;
-                } else if (this.map.hasAnObstacle(nextRow, nextCol)) {
-                    alert('There is an obstacle');
-                    return;
-                } else if (this.map.hasAnObject(nextRow, nextCol) && vehicleStatus.object.carrying) {
-                    alert('You cannot pick up another object while carrying one');
-                    return;
-                } else if (this.map.hasAnObject(currentRow, currentCol) && !vehicleStatus.object.carrying) {
-                    alert('You have to pick up the object first');
-                    return;
-                } else {
-                    this.vehicle.moveForward();
-                    this.vehicleView.update(this.vehicle.getStatus());
-                    this.actions.push(action);
-                }
-                break;
-            case 'left':
-            case 'right':
-                if (this.map.hasAnObject(currentRow, currentCol) && !vehicleStatus.object.carrying) {
-                    alert('You have to pick up the object first');
-                    return;
-                } else {
-                    this.vehicle.rotate(action);
-                    this.vehicleView.update(this.vehicle.getStatus());
-                    this.actions.push(action);
-                }
-                break;
-            case 'function':
-                const objectNumber = this.map.hasAnObject(currentRow, currentCol);
-                if (objectNumber && !vehicleStatus.object.carrying) {
-                    if (this.map.objectPicked(objectNumber)) {
-                        const objectStatus = this.map.getObjectAt(currentRow, currentCol);
-                        this.vehicle.grab(objectStatus);
+            for (let i=0; i<this.actions.queueList.length; i++) {    
+                const act = this.actions.queueList[i];
+                let vehicleStatus = this.vehicle.getStatus();
+                success = false;
+
+                if (act === 'forward') {
+                    let result = this.isPossibleMoveFoward(vehicleStatus);
+                    if (result.result) {
+                        this.vehicle.moveForward();
+                        this.vehicleView.update(this.vehicle.getStatus());
+                        success = true;
+                    } else {
+                        alert(result.message);                        
+                    }
+                } else if (act === 'left' || act === 'right') {
+                    let result = this.isPossibleToRotate(vehicleStatus);
+                    if (result.result) {
+                        this.vehicle.rotate(act);
+                        this.vehicleView.update(this.vehicle.getStatus());
+                        success = true;
+                    } else {
+                        alert(result.message);
+                    }
+                } else if (act === 'function') {
+                    let result = this.isPossibleToPickUpOfDropOff(vehicleStatus);
+                    if (result.result === 'pickUp') {
+                        let currentRow = vehicleStatus.position.row;
+                        let currentCol = vehicleStatus.position.col;
+                        this.vehicle.grab(this.map.getObjectAt(currentRow, currentCol));
                         this.vehicleView.update(this.vehicle.getStatus());
                         this.mapView.draw(this.map.getStatus());
-                        this.actions.push(action);
-                    }
-                } else {
-                    const objectEndPoint = this.map.hasAnEndPointOfObject(currentRow, currentCol);
-                    if (!objectEndPoint) {
-                        if (vehicleStatus.object.carrying) {
-                            alert('Put it in the right place');
-                        } else {
-                            alert('Nothing to grab');
-                        }
-                    } else if (this.map.objectReleased(vehicleStatus.object.number, currentRow, currentCol)) {
+                        success = true;
+                    } else if (result.result === 'dropOff') {
                         this.vehicle.release();
                         this.vehicleView.update(this.vehicle.getStatus());
                         this.mapView.draw(this.map.getStatus());
-                        this.actions.push(action);
+                        success = true;
+                    } else {
+                        alert(result.message);
                     }
                 }
-                break;
-            case 'delete':
-                this.actions.pop();
-                break;
-            case 'finish':
-                if (currentRow === 0 && currentCol === 0 && this.map.isCompleted()) {
-                    alert('CLEAR!');
-                    // this.gameData = null;
-                    // this.currentMapIndex = null;
+
+                if (success) {
+                    await this.delay(300);
+                } else {
+                    this.setupGame();
+                    break;
+                }
+            }
+
+            if (success) {
+                let vehicleStatus = this.vehicle.getStatus();
+                let result = this.isPossibleToFinishGame(vehicleStatus);
+
+                if (result.result) {
+                    alert(result.message);
+                    this.setupGame(false, false);
                     this.levelSelectionModal.openModal();
                 } else {
-                    alert('Go to the starting position');
+                    alert(result.message);
+                    this.setupGame(false, false);
                 }
-                break;
-            default:
-                break;
+            }
+        }
+    }
+
+    async handleMoveOnSimulatorMode(action) {
+        const vehicleStatus = this.vehicle.getStatus();
+
+        if (action === 'forward') {
+            let result = this.isPossibleMoveFoward(vehicleStatus);
+            if (result.result) {
+                this.vehicle.moveForward();
+                this.vehicleView.update(this.vehicle.getStatus());
+                this.actions.push(action);
+            } else {
+                alert(result.message);                        
+            }
+        } else if (action === 'left' || action == 'right') {
+            let result = this.isPossibleToRotate(vehicleStatus);
+            if (result.result) {
+                this.vehicle.rotate(action);
+                this.vehicleView.update(this.vehicle.getStatus());
+                this.actions.push(action)
+            } else {
+                alert(result.message);
+            }
+        } else if (action === 'function') {
+            let result = this.isPossibleToPickUpOfDropOff(vehicleStatus);
+            if (result.result === 'pickUp') {
+                let currentRow = vehicleStatus.position.row;
+                let currentCol = vehicleStatus.position.col;
+                this.vehicle.grab(this.map.getObjectAt(currentRow, currentCol));
+                this.vehicleView.update(this.vehicle.getStatus());
+                this.mapView.draw(this.map.getStatus());
+                this.actions.push(action);
+            } else if (result.result === 'dropOff') {
+                this.vehicle.release();
+                this.vehicleView.update(this.vehicle.getStatus());
+                this.mapView.draw(this.map.getStatus());
+                this.actions.push(action);
+            } else {
+                alert(result.message);
+            }
+        } else if (action === 'delete') {
+            alert('Not supported')
+        } else if (action === 'finish') {
+            let vehicleStatus = this.vehicle.getStatus();
+            let result = this.isPossibleToFinishGame(vehicleStatus);
+            if (result.result) {
+                alert(result.message);
+                this.setupGame(false, true);
+                this.levelSelectionModal.openModal();
+            } else {
+                alert(result.message);
+            }
+        }
+    }
+
+    isPossibleMoveFoward(vehicleStatus) {
+        let currentRow = vehicleStatus.position.row;
+        let currentCol = vehicleStatus.position.col;
+        let nextRow = vehicleStatus.nextPosition.row;
+        let nextCol = vehicleStatus.nextPosition.col;
+
+        let res = false;
+        let msg = '';
+
+        if (!this.map.isPossibleAt(nextRow, nextCol)) {
+            msg = '[ERROR] Out of Map';
+        } else if (this.map.hasAnObstacle(nextRow, nextCol)) {
+            msg = '[ERROR] There is an Obstacle';
+        } else if (this.map.hasAnObject(nextRow, nextCol) && vehicleStatus.object.carrying) {
+            msg = '[ERROR] You Cannot Pick Up Another Object While Carrying One';
+        } else if (this.map.hasAnObject(currentRow, currentCol) && !vehicleStatus.object.carrying) {
+            msg = '[ERROR] You Have to Pick Up the Object First';
+        } else {
+            res = true;
+            msg = '';
+        }
+
+        return {
+            result : res,
+            message : msg
+        }
+    }
+
+    isPossibleToRotate(vehicleStatus) {
+        let currentRow = vehicleStatus.position.row;
+        let currentCol = vehicleStatus.position.col;
+        let carrying = vehicleStatus.object.carrying;
+
+        let res = false;
+        let msg = '';
+
+        if (this.map.hasAnObject(currentRow, currentCol) && !carrying) {
+            msg = '[ERROR] You Have to Pick Up the Object First';
+        } else {
+            res = true;
+            msg = '';
+        }
+
+        return {
+            result : res,
+            message : msg
+        }
+    }
+
+    isPossibleToPickUpOfDropOff(vehicleStatus) {
+        let currentRow = vehicleStatus.position.row;
+        let currentCol = vehicleStatus.position.col;
+        let carrying = vehicleStatus.object.carrying;
+        let caryyingNumber = vehicleStatus.object.number;
+
+        let res = false;
+        let msg = '';
+
+        // Pick Up the Object
+        const objectNumber = this.map.hasAnObject(currentRow, currentCol);
+        if (!carrying && objectNumber) {
+            res = this.map.objectPicked(objectNumber);
+            res = res ? 'pickUp' : '[ERROR] : Something Wrong';
+            msg = res;
+        }
+        // Drop Off the Object
+        else {
+            const isEndPoint = this.map.hasAnEndPointOfObject(currentRow, currentCol);
+            if (isEndPoint) {
+                res = this.map.objectReleased(caryyingNumber, currentRow, currentCol);
+                res = res ? 'dropOff' : '[ERROR] : Something Wrong'
+            } else {
+                if (carrying) {
+                    msg = '[ERROR] : Put it in the right place';
+                } else {
+                    msg = '[ERROR] : Nothing to grab';
+                }
+            }
+        }
+
+        return {
+            result : res,
+            message : msg
+        }
+    }
+
+    isPossibleToFinishGame(vehicleStatus) {
+        let currentRow = vehicleStatus.position.row;
+        let currentCol = vehicleStatus.position.col;
+
+        let res = false;
+        let msg = '';
+
+        // At Starting Point
+        if (currentRow === 0 && currentCol === 0 && this.map.isCompleted()) {
+            res = true;
+            msg = 'CLEAR!';
+        } else {
+            msg = '[ERROR] Go to the Starting Position';
+        }
+
+        return {
+            result : res,
+            message : msg
         }
     }
 }
+
 
 // Initialize the game
 const game = new Game();
