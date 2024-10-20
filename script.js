@@ -958,7 +958,7 @@ class Game {
             res = true;
             msg = 'CLEAR!';
         } else {
-            msg = '[ERROR] Go to the Starting Position';
+            msg = '[ERROR] Finish Tasks and Go to the Starting Position';
         }
 
         return {
