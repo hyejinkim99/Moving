@@ -45,7 +45,7 @@ class ActionQueue {
             'forward': '⬆️',
             'left': '⬅️',
             'right': '➡️',
-            'function': '⏹'
+            'function': '⏹️'
         };
         return actionMap[action] || '';
     }
